@@ -9,6 +9,7 @@ import com.skilldistillery.filmquery.database.DatabaseAccessor;
 import com.skilldistillery.filmquery.database.DatabaseAccessorObject;
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
+import com.skilldistillery.filmquery.entities.Language;
 
 public class FilmQueryApp {
 
@@ -18,18 +19,19 @@ public class FilmQueryApp {
 		FilmQueryApp app = new FilmQueryApp();
 
 		app.launch();
+//		app.test();
 
 	}
 
 	private void test() throws SQLException {
-//    Film film = db.findFilmById(1);
-//	List<Film> f = db.findFilmsByActorId(1);
+//		Film film = db.findFilmById(1);
+//		List<Film> f = db.findFilmsByActorId(1);
 //		List<Actor> a = db.findActorsByFilmId(4);
-//	  Actor a = db.findActorById(4);
-
-		String t = "the";
-		List<Film> f = db.findFilmsBySearchWord(t);
-		System.out.println(f);
+//		Actor a = db.findActorById(4);
+//		Language l = db.findLangById(3);
+//		List<Film> f = db.findFilmsBySearchWord(t);
+//
+//		System.out.println(l.getName());
 
 	}
 
@@ -93,16 +95,22 @@ public class FilmQueryApp {
 		System.out.println("-------------------------------------------");
 	}
 
-	public void searchKeyWord(String word) {
+	public void searchKeyWord(String word) throws SQLException {
 
 		List<Film> films = db.findFilmsBySearchWord(word);
 
 		if (films.isEmpty()) {
-			System.out.println("there were no films with the key word \"" + word + "\" ");
+			System.out.println("There were no films with the key word \"" + word + "\" ");
+			System.out.println();
 		} else {
-			System.out.println("---------FILM(S)--------");
+			System.out.println("--------- FILM(S) CONTAINING \"" + word.toUpperCase() + "\" --------");
 			for (Film film : films) {
-				System.out.println(film.getTitle() + " (" + film.getReleaseYear() + ")- " + film.getDescription());
+				Language lang = db.findLangById(film.getLanguageId());
+
+				System.out.println(film.getTitle() + " (" + film.getReleaseYear() + ")- " + film.getDescription()
+						+ ". \nRated: " + film.getRating() + " \nLanguage: " + lang.getName());
+				System.out.println("Cast:");
+				printActors(film.getId());
 				System.out.println();
 			}
 		}
@@ -111,15 +119,29 @@ public class FilmQueryApp {
 
 	public void searchFilmId(int f) throws SQLException {
 		Film film = db.findFilmById(f);
+		Language lang = db.findLangById(film.getLanguageId());
 
 		if (film.equals(null)) {
 			System.out.println("Film not found");
+			System.out.println();
 		} else {
 			System.out.println("---------FILM--------");
-			System.out.println(film.getTitle() + " (" + film.getReleaseYear() + ")- " + film.getDescription());
+			System.out.println(film.getTitle() + " (" + film.getReleaseYear() + ")- " + film.getDescription()
+					+ ". \nRated: " + film.getRating() + " \nLanguage: " + lang.getName());
+			System.out.println("Cast:");
+			printActors(film.getId());
 			System.out.println();
+		}
+	}
+
+	public void printActors(int filmId) {
+		List<Actor> actors = db.findActorsByFilmId(filmId);
+
+		for (Actor actor : actors) {
+			System.out.println(actor.getFirstName() + " " + actor.getLastName());
 
 		}
+
 	}
 
 	private void startUserInterface(Scanner input) {

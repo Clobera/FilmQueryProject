@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
+import com.skilldistillery.filmquery.entities.Language;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false&useLegacyDatetimeCode=false&serverTimezone=US/Mountain";
@@ -40,9 +41,8 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			double repCost = rs.getDouble("replacement_cost");
 			String rating = rs.getString("rating");
 			String features = rs.getString("special_features");
-			film = new Film(fId, title, desc, releaseYear, langId, rentDur, rate, 
-							length, repCost, rating, features);
-			
+			film = new Film(fId, title, desc, releaseYear, langId, rentDur, rate, length, repCost, rating, features);
+
 		}
 		conn.close();
 		return film;
@@ -112,7 +112,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	@Override
 	public List<Actor> findActorsByFilmId(int filmId) {
 		List<Actor> actors = new ArrayList<>();
-		
+
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
 			String sql = "SELECT * FROM actor JOIN film_actor ON actor.id = film_actor.actor_id WHERE film_id = ?";
@@ -125,7 +125,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				int id = rs.getInt("id");
 				String fn = rs.getString("first_name");
 				String ln = rs.getString("last_name");
-				
+
 				Actor actor = new Actor(id, fn, ln);
 				actors.add(actor);
 			}
@@ -135,15 +135,13 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return actors;
 	}
 
 	public List<Film> findFilmsBySearchWord(String keyWord) {
 		List<Film> films = new ArrayList<>();
 
-		
-	
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
 			String sql = "SELECT * FROM film WHERE film.title LIKE ? OR film.description LIKE ?";
@@ -167,9 +165,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				String features = rs.getString("special_features");
 				Film film = new Film(filmId, title, desc, releaseYear, langId, rentDur, rate, length, repCost, rating,
 						features);
-				
+
 				films.add(film);
-				
+
 			}
 			rs.close();
 			stmt.close();
@@ -177,10 +175,31 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		return films;
 	}
-	
-	
+
+	@Override
+	public Language findLangById(int languageId) throws SQLException {
+		Language lang = null;
+		String sql = "SELECT name, language.id FROM language  JOIN film ON language.id = film.language_id WHERE film.id = ?";
+
+		Connection conn = DriverManager.getConnection(URL, user, pass);
+
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, languageId);
+
+		ResultSet rs = stmt.executeQuery();
+
+		if (rs.next()) {
+			lang = new Language(); // Create the object
+			// Here is our mapping of query columns to our object fields:
+			lang.setId(rs.getInt("id"));
+			lang.setName(rs.getString("name"));
+
+		}
+		conn.close();
+		return lang;
+	}
+
 }
