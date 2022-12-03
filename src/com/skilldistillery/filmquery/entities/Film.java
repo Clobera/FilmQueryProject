@@ -17,7 +17,7 @@ public class Film {
 	private String specialFeatures;
 	private List<Actor> actors;
 
-	public Film() { }
+	public Film() {}
 
 	public Film(int id, String title, String description, short releaseYear, int languageId, int rentalDuration,
 			double rentalRate, int length, double replacementCost, String rating, String specialFeatures) {
@@ -150,13 +150,10 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "Film [id=" + id + ", title=" + title + ", description=" + description + ", releaseYear=" + releaseYear
-				+ ", languageId=" + languageId + ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate
-				+ ", length=" + length + ", replacementCost=" + replacementCost + ", rating=" + rating
-				+ ", specialFeatures=" + specialFeatures + "]";
+		return "Film [ID = " + id + ", Title = " + title + ", Description = " + description + ", ReleaseYear = " + releaseYear
+				+ ", Language Id = " + languageId + ", Rental Duration = " + rentalDuration + ", Rental Rate = " + rentalRate
+				+ ", Length=" + length + ", ReplacementCost=" + replacementCost + ", Rating=" + rating
+				+ ", Special Features = " + specialFeatures + "]";
 	}
 
-	
-
-	
 }

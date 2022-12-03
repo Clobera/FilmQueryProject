@@ -10,6 +10,8 @@ public interface DatabaseAccessor {
   public Film findFilmById(int filmId) throws SQLException;
   public Actor findActorById(int actorId) throws SQLException;
   public List<Actor> findActorsByFilmId(int filmId);
+  
+  public List<Film> findFilmsBySearchWord(String keyWord); //this one not req for hw
   //use isEmpty
  
 
