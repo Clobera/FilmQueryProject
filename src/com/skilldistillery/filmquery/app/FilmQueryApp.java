@@ -32,7 +32,6 @@ public class FilmQueryApp {
 //		List<Film> f = db.findFilmsBySearchWord(t);
 //
 //		System.out.println(l.getName());
-
 	}
 
 	private void launch() throws SQLException {
